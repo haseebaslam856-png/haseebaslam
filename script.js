@@ -91,33 +91,33 @@ document.querySelectorAll('.mobile-links a').forEach(link => {
     });
 });
 
-// ===== Scroll Animations =====
+// ===== Scroll Animations (Executive Spring Easing) =====
 const animateElements = document.querySelectorAll('[data-animate]');
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            const delay = entry.target.dataset.delay || 0;
+            const delay = parseInt(entry.target.dataset.delay || 0);
             setTimeout(() => {
                 entry.target.classList.add('animated');
-            }, parseInt(delay));
+            }, delay);
             observer.unobserve(entry.target);
         }
     });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
 animateElements.forEach(el => observer.observe(el));
 
-// ===== Counter Animation =====
+// ===== Counter Animation (Smooth Quartic Deceleration) =====
 function animateCounter(el) {
     const target = parseInt(el.dataset.count);
-    const duration = 2000;
+    const duration = 2200;
     const start = performance.now();
 
     function update(now) {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
+        const eased = 1 - Math.pow(1 - progress, 4);
         el.textContent = Math.round(target * eased);
         if (progress < 1) {
             requestAnimationFrame(update);
@@ -295,9 +295,10 @@ const afterRanks = [
 function renderGeogrid(ranks) {
     if (!geogridMap) return;
     geogridMap.innerHTML = '';
-    ranks.forEach(rank => {
+    ranks.forEach((rank, index) => {
         const pin = document.createElement('div');
-        pin.classList.add('geo-pin');
+        pin.classList.add('geo-pin', 'pop');
+        pin.style.animationDelay = `${index * 15}ms`;
         if (rank <= 3) {
             pin.classList.add('rank-green');
         } else if (rank <= 10) {
@@ -350,3 +351,18 @@ if (geogridMap) {
         geoStatPinsDiff.className = 'geo-stat-diff positive';
     });
 }
+
+// ===== Interactive Card Spotlight Tracking =====
+const spotlightCards = document.querySelectorAll(
+    '.service-card, .pricing-card, .result-card, .process-step, .industry-card, .client-review-card'
+);
+spotlightCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
+
