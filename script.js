@@ -1,13 +1,3 @@
-// ===== Preloader =====
-window.addEventListener('load', () => {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        setTimeout(() => {
-            preloader.classList.add('hidden');
-        }, 1400);
-    }
-});
-
 // ===== Navbar Scroll & Parallax =====
 const navbar = document.getElementById('navbar');
 const backToTop = document.getElementById('backToTop');
@@ -247,14 +237,11 @@ Looking forward to your audit and recommendations.`;
         if (successEmailBtn) successEmailBtn.href = mailtoUrl;
         if (successWhatsappBtn) successWhatsappBtn.href = whatsappUrl;
 
-        // Hide form and show success options
+        // Hide form and show in-card confirmation cleanly without any popup
         contactForm.style.display = 'none';
         if (formSuccessBox) {
             formSuccessBox.style.display = 'block';
         }
-
-        // Automatically trigger mailto link
-        window.location.href = mailtoUrl;
     });
 
     if (resetFormBtn) {
