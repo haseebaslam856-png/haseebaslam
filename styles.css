@@ -177,16 +177,16 @@ img {
 .nav-logo {
     display: flex;
     align-items: center;
-    gap: 10px;
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text);
+    letter-spacing: -0.01em;
+    transition: color var(--transition), opacity var(--transition);
 }
 
-.logo-icon {
+.nav-logo:hover {
     color: var(--accent-light);
-    display: flex;
 }
 
 .nav-links {
@@ -586,90 +586,120 @@ img {
     justify-content: center;
 }
 
-/* Hero Visual */
+/* 3D Hero Spatial Stage */
 .hero-visual {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    perspective: 1200px;
+    transform-style: preserve-3d;
 }
 
 .hero-icon-cluster {
     position: relative;
-    width: 320px;
-    height: 320px;
+    width: 340px;
+    height: 340px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transform-style: preserve-3d;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
 }
 
 .icon-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: rgba(18, 32, 56, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.25);
     border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
 
 .icon-card-main {
-    width: 140px;
-    height: 140px;
-    border-radius: 28px;
-    box-shadow: 0 20px 60px rgba(37, 99, 235, 0.25);
-    animation: mainFloat 6s ease-in-out infinite;
+    width: 150px;
+    height: 150px;
+    border-radius: 32px;
+    box-shadow: 0 25px 70px rgba(37, 99, 235, 0.35), 0 0 40px rgba(56, 189, 248, 0.2);
+    animation: mainFloat3D 7s ease-in-out infinite;
+    transform: translateZ(40px);
 }
 
-@keyframes mainFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+@keyframes mainFloat3D {
+    0%, 100% {
+        transform: perspective(1000px) rotateY(-8deg) rotateX(6deg) translateY(0) translateZ(40px);
+    }
+    50% {
+        transform: perspective(1000px) rotateY(8deg) rotateX(-5deg) translateY(-16px) translateZ(65px);
+        box-shadow: 0 35px 90px rgba(37, 99, 235, 0.45), 0 0 55px rgba(56, 189, 248, 0.3);
+    }
 }
 
 .icon-card-float {
     position: absolute;
-    padding: 10px 16px;
-    gap: 8px;
-    font-size: 0.82rem;
+    padding: 12px 18px;
+    gap: 10px;
+    font-size: 0.85rem;
     font-weight: 700;
     border-radius: var(--radius-sm);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
 }
 
 .icon-card-1 {
-    top: 10px;
-    right: 10px;
+    top: 5px;
+    right: -10px;
     color: var(--amber);
-    animation: float1 5s ease-in-out infinite;
+    animation: float3D1 6s ease-in-out infinite;
+    transform: translateZ(80px) rotateY(-10deg) rotateX(5deg);
 }
 
-@keyframes float1 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(8px, -8px); }
+@keyframes float3D1 {
+    0%, 100% {
+        transform: translateZ(80px) rotateY(-10deg) rotateX(5deg) translateY(0);
+    }
+    50% {
+        transform: translateZ(105px) rotateY(-4deg) rotateX(10deg) translateY(-14px) translateX(8px);
+    }
 }
 
 .icon-card-2 {
-    bottom: 40px;
-    right: 0;
+    bottom: 35px;
+    right: -25px;
     color: var(--green);
-    animation: float2 7s ease-in-out infinite;
+    animation: float3D2 8s ease-in-out infinite 0.4s;
+    transform: translateZ(100px) rotateY(12deg) rotateX(-6deg);
 }
 
-@keyframes float2 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-6px, -10px); }
+@keyframes float3D2 {
+    0%, 100% {
+        transform: translateZ(100px) rotateY(12deg) rotateX(-6deg) translateY(0);
+    }
+    50% {
+        transform: translateZ(125px) rotateY(6deg) rotateX(-12deg) translateY(-16px) translateX(-6px);
+    }
 }
 
 .icon-card-3 {
-    bottom: 20px;
-    left: 10px;
+    bottom: 15px;
+    left: -15px;
     color: var(--pink);
-    animation: float3 6s ease-in-out infinite 0.5s;
+    animation: float3D3 7s ease-in-out infinite 0.8s;
+    transform: translateZ(70px) rotateY(-8deg) rotateX(8deg);
 }
 
-@keyframes float3 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(6px, 8px); }
+@keyframes float3D3 {
+    0%, 100% {
+        transform: translateZ(70px) rotateY(-8deg) rotateX(8deg) translateY(0);
+    }
+    50% {
+        transform: translateZ(95px) rotateY(-14deg) rotateX(3deg) translateY(-12px) translateX(6px);
+    }
 }
 
 /* Scroll Indicator */
@@ -2648,7 +2678,19 @@ img {
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 0 25px rgba(37, 99, 235, 0.15);
 }
 
-/* Ensure contents sit above the spotlight */
+/* ===== 3D Perspective & Depth System ===== */
+.service-card,
+.pricing-card,
+.result-card,
+.process-step,
+.industry-card,
+.client-review-card,
+.geogrid-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    will-change: transform;
+}
+
 .service-card > *,
 .pricing-card > *,
 .result-card > *,
@@ -2657,6 +2699,20 @@ img {
 .client-review-card > * {
     position: relative;
     z-index: 2;
+    transform: translateZ(26px);
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-card .service-icon,
+.pricing-card .popular-ribbon,
+.pricing-card .plan-price,
+.icon-card {
+    transform: translateZ(42px);
+}
+
+.geogrid-card {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
 
 /* Tag / Badge Shimmer */

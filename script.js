@@ -352,17 +352,85 @@ if (geogridMap) {
     });
 }
 
-// ===== Interactive Card Spotlight Tracking =====
-const spotlightCards = document.querySelectorAll(
+// ===== 3D Card Tilt & Spotlight Physics Engine =====
+const tiltCards = document.querySelectorAll(
     '.service-card, .pricing-card, .result-card, .process-step, .industry-card, .client-review-card'
 );
-spotlightCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+
+tiltCards.forEach(card => {
+    let bounds = null;
+
+    function handleMouseMove(e) {
+        if (!bounds) bounds = card.getBoundingClientRect();
+        const x = e.clientX - bounds.left;
+        const y = e.clientY - bounds.top;
+
+        // Card center offsets
+        const centerX = bounds.width / 2;
+        const centerY = bounds.height / 2;
+
+        // 3D Tilt angles (max ±10deg)
+        const tiltX = ((y - centerY) / centerY) * -9;
+        const tiltY = ((x - centerX) / centerX) * 9;
+
+        card.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(1.025, 1.025, 1.025) translateY(-6px)`;
         card.style.setProperty('--mouse-x', `${x}px`);
         card.style.setProperty('--mouse-y', `${y}px`);
+    }
+
+    card.addEventListener('mouseenter', () => {
+        bounds = card.getBoundingClientRect();
+        card.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease';
+        card.addEventListener('mousemove', handleMouseMove);
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.removeEventListener('mousemove', handleMouseMove);
+        bounds = null;
+        card.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.65s ease, border-color 0.65s ease';
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateY(0)';
     });
 });
+
+// ===== Hero 3D Spatial Parallax =====
+const heroVisual = document.querySelector('.hero-visual');
+const heroCluster = document.querySelector('.hero-icon-cluster');
+
+if (heroVisual && heroCluster && window.matchMedia('(min-width: 992px)').matches) {
+    let heroTicking = false;
+    window.addEventListener('mousemove', (e) => {
+        if (!heroTicking) {
+            requestAnimationFrame(() => {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                const xOffset = (e.clientX - w / 2) / (w / 2);
+                const yOffset = (e.clientY - h / 2) / (h / 2);
+
+                const rotY = xOffset * 18;
+                const rotX = -yOffset * 14;
+
+                heroCluster.style.transform = `rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg)`;
+                heroTicking = false;
+            });
+            heroTicking = true;
+        }
+    }, { passive: true });
+}
+
+// ===== 3D Geogrid Tilt =====
+const geogridCard = document.querySelector('.geogrid-card');
+if (geogridCard && window.matchMedia('(min-width: 768px)').matches) {
+    geogridCard.addEventListener('mousemove', (e) => {
+        const rect = geogridCard.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const tiltX = (y / (rect.height / 2)) * -6;
+        const tiltY = (x / (rect.width / 2)) * 6;
+        geogridCard.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateY(-4px)`;
+    });
+
+    geogridCard.addEventListener('mouseleave', () => {
+        geogridCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+    });
+}
 
