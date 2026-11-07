@@ -192,25 +192,69 @@ document.querySelectorAll('.faq-question').forEach(button => {
     });
 });
 
-// ===== Contact Form =====
+// ===== Contact Form Handling (Reliable & Zero Downtime) =====
 const contactForm = document.getElementById('contactForm');
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+const formSuccessBox = document.getElementById('formSuccessBox');
+const successWhatsappBtn = document.getElementById('successWhatsappBtn');
+const successEmailBtn = document.getElementById('successEmailBtn');
+const resetFormBtn = document.getElementById('resetFormBtn');
 
-    const btn = contactForm.querySelector('button[type="submit"]');
-    const originalText = btn.innerHTML;
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-    btn.innerHTML = '<span>Message Sent! ✓</span>';
-    btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-    btn.disabled = true;
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const business = document.getElementById('business').value.trim();
+        const message = document.getElementById('message').value.trim();
 
-    setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.background = '';
-        btn.disabled = false;
-        contactForm.reset();
-    }, 3000);
-});
+        const emailSubject = `Local SEO Audit Request - ${business || name}`;
+        const emailBody = `Hi Haseeb,
+
+I would like to request a Local SEO Audit for my business.
+
+• Client Name: ${name}
+• Client Email: ${email}
+• Business Name: ${business || 'N/A'}
+
+• Business Details / Goals:
+${message}
+
+Looking forward to your audit and recommendations.`;
+
+        const waText = `Hi Haseeb! I would like to get a Local SEO Audit for my business:
+• Name: ${name}
+• Email: ${email}
+• Business: ${business || 'N/A'}
+• Details: ${message}`;
+
+        const mailtoUrl = `mailto:haseebaslam856@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+        const whatsappUrl = `https://wa.me/923230903745?text=${encodeURIComponent(waText)}`;
+
+        // Set action URLs
+        if (successEmailBtn) successEmailBtn.href = mailtoUrl;
+        if (successWhatsappBtn) successWhatsappBtn.href = whatsappUrl;
+
+        // Hide form and show success options
+        contactForm.style.display = 'none';
+        if (formSuccessBox) {
+            formSuccessBox.style.display = 'block';
+        }
+
+        // Automatically trigger mailto link
+        window.location.href = mailtoUrl;
+    });
+
+    if (resetFormBtn) {
+        resetFormBtn.addEventListener('click', () => {
+            contactForm.reset();
+            contactForm.style.display = 'block';
+            if (formSuccessBox) {
+                formSuccessBox.style.display = 'none';
+            }
+        });
+    }
+}
 
 // ===== Parallax =====
 const heroGrid = document.querySelector('.hero-bg-grid');
