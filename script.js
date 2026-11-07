@@ -1,14 +1,17 @@
 // ===== Preloader =====
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
-    setTimeout(() => {
-        preloader.classList.add('hidden');
-    }, 1400);
+    if (preloader) {
+        setTimeout(() => {
+            preloader.classList.add('hidden');
+        }, 1400);
+    }
 });
 
-// ===== Navbar Scroll Effect =====
+// ===== Navbar Scroll & Parallax =====
 const navbar = document.getElementById('navbar');
 const backToTop = document.getElementById('backToTop');
+const heroGrid = document.querySelector('.hero-bg-grid');
 
 let ticking = false;
 window.addEventListener('scroll', () => {
@@ -16,16 +19,20 @@ window.addEventListener('scroll', () => {
         requestAnimationFrame(() => {
             const scrollY = window.scrollY;
 
-            // Navbar
-            navbar.classList.toggle('scrolled', scrollY > 50);
+            // Navbar background blur/solid on scroll
+            if (navbar) {
+                navbar.classList.toggle('scrolled', scrollY > 50);
+            }
 
-            // Back to top
-            backToTop.classList.toggle('visible', scrollY > 600);
+            // Back to top button
+            if (backToTop) {
+                backToTop.classList.toggle('visible', scrollY > 600);
+            }
 
-            // Active nav highlight
+            // Active nav highlight (for anchor links)
             updateActiveNav(scrollY);
 
-            // Parallax
+            // Hero Grid Parallax
             if (heroGrid) {
                 heroGrid.style.transform = `translateY(${scrollY * 0.3}px)`;
             }
@@ -37,9 +44,11 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // ===== Back to Top =====
-backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+if (backToTop) {
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
 
 // ===== Cursor Glow =====
 const cursorGlow = document.getElementById('cursorGlow');
@@ -167,11 +176,14 @@ function updateActiveNav(scrollY) {
     });
 
     navLinks.forEach(link => {
-        const href = link.getAttribute('href').substring(1);
-        if (href === currentSection) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            const sectionId = href.substring(1);
+            if (sectionId === currentSection) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
         }
     });
 }
@@ -256,8 +268,6 @@ Looking forward to your audit and recommendations.`;
     }
 }
 
-// ===== Parallax =====
-const heroGrid = document.querySelector('.hero-bg-grid');
 
 // ===== Dynamic Copyright Year =====
 const yearEl = document.querySelector('.footer-bottom p');
